@@ -1,0 +1,54 @@
+#!/usr/bin/env joker
+
+(ns script
+  (:require [joker.tools.cli :as cli]
+            [joker.os :as os]
+            [joker.strconv :refer [atoi]]
+            [joker.string :as string]))
+
+(def opts
+  [["-p" "--port VALUE" "Port number" :parse-fn atoi
+                                      :validate [#(number? %) "Port must be a number"]]
+   ["-h" "--help" "freeport -p <port>"]
+   ["-v" "--version" "Show version information"]])
+
+(defn show-options
+  [summary errors]
+  (println "freeport OPTIONS\n")
+  (println summary)
+  (when errors
+    (println "\nErrors:")
+    (run! println errors)))
+
+(defn free-port
+  [port]
+  (let [grep-output (:out (os/sh "bash" "-c" (str "lsof -i:" port " | grep LISTEN")))
+        ports (filterv
+               #(re-find (re-pattern %) grep-output)
+               (string/split-lines
+                (string/trim
+                 (:out (os/sh "bash" "-c" (str "lsof -ti tcp:" port))))))]
+    (run! #(os/sh "bash" "-c" (str "kill -9 " %)) ports)
+    (println (str "Killed " ports))))
+
+(let [{:keys [options summary errors]} (cli/parse-opts *command-line-args* opts)
+      {:keys [help port version]} options]
+  (cond
+    errors
+    (do
+      (show-options summary errors)
+      (os/exit -1))
+
+    help
+    (show-options summary nil)
+
+    version
+    (println "version: 0.0.1")
+
+    (some? port)
+    (free-port port)
+
+    :else
+    (do
+      (show-options summary ["Must specify a value for --port"])
+      (os/exit -1))))
