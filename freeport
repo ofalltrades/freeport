@@ -9,7 +9,7 @@
 (def opts
   [["-p" "--port VALUE" "Port number" :parse-fn atoi
                                       :validate [#(number? %) "Port must be a number"]]
-   ["-h" "--help" "freeport -p <port>"]
+   ["-h" "--help"]
    ["-v" "--version" "Show version information"]])
 
 (defn show-options
@@ -40,7 +40,9 @@
       (os/exit -1))
 
     help
-    (show-options summary nil)
+    (do
+      (println "freeport kills processes listening to a port.\n\n  usage: freeport -p <port> \n")
+      (show-options summary nil))
 
     version
     (println "version: 0.0.1")
