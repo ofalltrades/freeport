@@ -2,7 +2,7 @@ class Freeport < Formula
   desc "freeport will free ports by killing processes listening to them."
   homepage "https://github.com/ofalltrades/freeport"
   url "https://github.com/ofalltrades/freeport/blob/master/freeport-0.1.tar.gz"
-  sha256 "9a0c58110a64ecb007628cb2b3a639a60c3229c2098d8aaf82e7b8e6648355d7"
+  sha256 "7f868ede0f6fe4617290175abf101bf4cca3dfc1006bad4e9b9b58a4f4f0ba45"
   version "0.0.1"
 
   depends_on "candid82/brew/joker"
