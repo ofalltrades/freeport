@@ -1,4 +1,4 @@
-lass Freeport < Formula
+class Freeport < Formula
   desc "freeport will free ports by killing processes listening to them."
   homepage "https://github.com/ofalltrades/freeport"
   url "https://github.com/ofalltrades/homebrew-freeport/blob/master/freeport-0.1.tgz"
